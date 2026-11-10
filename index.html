@@ -1,0 +1,1332 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#073b59">
+
+<title>LIÊN HOA TRI ÂN | THPT QUỐC THÁI</title>
+
+<style>
+
+/* =========================================
+   1. THIẾT LẬP CHUNG
+========================================= */
+
+:root {
+    --blue: #082d62;
+    --blue-light: #1266a0;
+    --pink: #ffb5d1;
+    --pink-light: #ffe4ed;
+    --gold: #d8b878;
+    --ivory: #fffaf0;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #073b59;
+    color: white;
+    overflow-x: hidden;
+}
+
+button {
+    font: inherit;
+}
+
+/* =========================================
+   2. BACKGROUND HỒ SEN TOÀN MÀN HÌNH
+========================================= */
+
+.scene {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+
+    overflow: hidden;
+    isolation: isolate;
+
+    background: #073b59;
+}
+
+/* Chỉ sử dụng image.png làm background */
+
+.pond-background {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: -3;
+    overflow: hidden;
+}
+
+.pond-background img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center center;
+
+    filter:
+        brightness(0.82)
+        saturate(1.05);
+
+    transform: scale(1.015);
+}
+
+/* Lớp phủ xanh ngọc */
+
+.scene::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5, 35, 73, 0.18) 0%,
+            rgba(4, 40, 75, 0.08) 40%,
+            rgba(0, 35, 61, 0.24) 100%
+        );
+}
+
+/* =========================================
+   3. TIÊU ĐỀ KÍNH XANH TRONG SUỐT
+========================================= */
+
+.header {
+    position: relative;
+    z-index: 5;
+
+    width: min(780px, 92%);
+    margin: 24px auto 0;
+    padding: 23px 18px;
+
+    text-align: center;
+
+    background: rgba(7, 48, 91, 0.58);
+
+    border: 1px solid rgba(220, 240, 240, 0.65);
+    border-radius: 14px;
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    box-shadow:
+        0 10px 35px rgba(0, 20, 45, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.header .school-name {
+    font-size: 12px;
+    letter-spacing: 4px;
+    font-weight: 600;
+
+    color: #e8f5ed;
+}
+
+.header h1 {
+    margin-top: 8px;
+
+    font-family: Georgia, serif;
+    font-size: clamp(28px, 5vw, 52px);
+
+    letter-spacing: 3px;
+    color: #fff8e9;
+
+    text-shadow:
+        0 2px 3px rgba(0,0,0,.45),
+        0 0 18px rgba(255,255,255,.25);
+}
+
+.header .ornament {
+    width: 125px;
+    height: 2px;
+
+    margin: 13px auto;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #d8c28b,
+        transparent
+    );
+}
+
+.header .subtitle {
+    margin-top: 8px;
+
+    font-family: Georgia, serif;
+    font-size: clamp(13px, 2vw, 19px);
+    font-style: italic;
+
+    color: #ffd8e8;
+    letter-spacing: 1px;
+
+    text-shadow: 0 2px 5px rgba(0,0,0,.4);
+}
+
+/* =========================================
+   4. KHU VỰC HỒ SEN
+========================================= */
+
+.pond-area {
+    position: relative;
+
+    min-height: 620px;
+    height: 65vh;
+
+    z-index: 2;
+}
+
+.pond-caption {
+    position: absolute;
+
+    top: 5px;
+    left: 50%;
+
+    transform: translateX(-50%);
+    z-index: 3;
+
+    font-family: Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+
+    color: #fff0d1;
+    white-space: nowrap;
+
+    text-shadow: 0 2px 8px #002c5b;
+}
+
+/* =========================================
+   5. HOA SEN TƯƠNG TÁC
+========================================= */
+
+.lotus {
+    position: absolute;
+    z-index: 4;
+
+    width: var(--size);
+    left: var(--x);
+    top: var(--y);
+
+    transform: translate(-50%, -50%);
+
+    cursor: pointer;
+
+    border: 0;
+    padding: 0;
+    background: transparent;
+
+    transition:
+        transform .4s ease,
+        filter .4s ease;
+
+    animation:
+        lotusFloat var(--duration, 5s) ease-in-out infinite;
+
+    animation-delay: var(--delay, 0s);
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.lotus img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(0 8px 10px rgba(0,0,0,.45))
+        drop-shadow(0 0 9px rgba(255,190,220,.45));
+
+    transition: filter .4s ease;
+}
+
+.lotus:hover,
+.lotus:focus-visible {
+    z-index: 20;
+
+    transform: translate(-50%, -50%) scale(1.18);
+
+    filter:
+        drop-shadow(0 0 15px rgba(255,220,240,.8));
+}
+
+.lotus:hover img,
+.lotus:focus-visible img {
+    filter:
+        drop-shadow(0 8px 12px rgba(0,0,0,.4))
+        drop-shadow(0 0 18px rgba(255,205,230,.95));
+}
+
+.lotus:focus-visible {
+    outline: 2px solid #ffe5ad;
+    outline-offset: 6px;
+    border-radius: 50%;
+}
+
+/* Tên tập thể khi rê chuột */
+
+.lotus-name {
+    position: absolute;
+
+    left: 50%;
+    bottom: -22px;
+
+    transform: translateX(-50%) translateY(5px);
+
+    padding: 5px 11px;
+
+    border: 1px solid rgba(255,220,180,.7);
+    border-radius: 20px;
+
+    background: rgba(5,35,77,.92);
+    color: #fff4df;
+
+    font-size: 11px;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .3s ease;
+    pointer-events: none;
+}
+
+.lotus:hover .lotus-name,
+.lotus:focus-visible .lotus-name {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Chuyển động hoa */
+
+@keyframes lotusFloat {
+    0%, 100% {
+        margin-top: 0;
+    }
+
+    50% {
+        margin-top: -7px;
+    }
+}
+
+/* =========================================
+   6. ÁNH SÁNG VÀ MẶT NƯỚC
+========================================= */
+
+.water-glow {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 25%;
+
+    height: 60%;
+
+    pointer-events: none;
+    z-index: 1;
+
+    background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(255,211,231,.12),
+        transparent 65%
+    );
+
+    animation: glowPulse 7s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%,100% {
+        opacity: .45;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Gợn sóng */
+
+.ripple {
+    position: absolute;
+
+    width: 75px;
+    height: 22px;
+
+    border: 1px solid rgba(255,230,240,.4);
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%);
+
+    pointer-events: none;
+
+    animation: rippleEffect 5s ease-out infinite;
+}
+
+@keyframes rippleEffect {
+    0% {
+        opacity: .65;
+        transform: translate(-50%,-50%) scale(.5);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%,-50%) scale(2.3);
+    }
+}
+
+/* =========================================
+   7. ĐỐM SÁNG
+========================================= */
+
+.sparkles {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+    overflow: hidden;
+
+    z-index: 2;
+}
+
+.sparkle {
+    position: absolute;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: #fff5cf;
+
+    box-shadow:
+        0 0 10px 3px rgba(255,220,160,.5);
+
+    animation: sparkleAnimation 4s ease-in-out infinite;
+}
+
+@keyframes sparkleAnimation {
+    0%,100% {
+        opacity: .15;
+        transform: scale(.6);
+    }
+
+    50% {
+        opacity: .95;
+        transform: scale(1.5);
+    }
+}
+
+/* =========================================
+   8. CHÂN TRANG
+========================================= */
+
+.footer {
+    position: relative;
+    z-index: 5;
+
+    text-align: center;
+
+    padding: 12px 15px 20px;
+
+    color: #ffe7d5;
+
+    font-size: 12px;
+    letter-spacing: 1px;
+
+    text-shadow: 0 2px 6px #001a3a;
+}
+
+.footer strong {
+    color: #ffcfdf;
+    font-family: Georgia, serif;
+}
+
+/* =========================================
+   9. THIỆP TRI ÂN
+========================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background: rgba(2,15,40,.76);
+
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity .4s ease,
+        visibility .4s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.letter {
+    position: relative;
+
+    width: min(570px, 100%);
+
+    max-height: 85vh;
+    max-height: 85svh;
+
+    overflow-y: auto;
+
+    padding: 45px 38px 35px;
+
+    color: #53402c;
+    text-align: center;
+
+    background:
+        radial-gradient(
+            ellipse at top,
+            #fffefa,
+            #f8eedc 75%
+        );
+
+    border: 2px solid #c9a65e;
+
+    outline: 5px solid rgba(201,166,94,.2);
+
+    border-radius: 5px;
+
+    box-shadow:
+        0 20px 80px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(210,180,130,.15);
+
+    transform: translateY(35px) scale(.92);
+
+    transition:
+        transform .5s cubic-bezier(.2,.8,.2,1);
+}
+
+.modal.active .letter {
+    transform: translateY(0) scale(1);
+}
+
+.letter::before {
+    content: "";
+
+    position: absolute;
+    inset: 9px;
+
+    border: 1px solid rgba(194,157,85,.6);
+
+    pointer-events: none;
+}
+
+.letter-ornament {
+    color: #c69a4f;
+
+    font-size: 25px;
+
+    margin-bottom: 15px;
+}
+
+.letter-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+
+    color: #a47c3e;
+    font-weight: 700;
+}
+
+.letter h2 {
+    margin: 18px 0;
+
+    font-family: Georgia, serif;
+    font-size: clamp(23px, 5vw, 32px);
+
+    color: #174c75;
+}
+
+.letter-divider {
+    width: 95px;
+    height: 2px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #c69a4f,
+        transparent
+    );
+
+    margin: 18px auto;
+}
+
+.letter-message {
+    font-family: Georgia, serif;
+
+    font-size: 17px;
+    line-height: 1.9;
+
+    white-space: pre-line;
+    text-align: justify;
+
+    color: #574633;
+
+    min-height: 70px;
+}
+
+.letter-signature {
+    margin-top: 28px;
+
+    font-family: Georgia, serif;
+    font-style: italic;
+
+    color: #946e37;
+    line-height: 1.8;
+}
+
+/* Nút đóng */
+
+.close-button {
+    position: absolute;
+
+    top: 15px;
+    right: 17px;
+
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid #c9a65e;
+    border-radius: 50%;
+
+    color: #8a673a;
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+    transition: .3s;
+}
+
+.close-button:hover {
+    color: white;
+    background: #a77c43;
+
+    transform: rotate(90deg);
+}
+
+/* =========================================
+   DẤU ẤN TÁC GIẢ - CÔNG HUY
+========================================= */
+
+.author-credit {
+    margin-top: 16px;
+    padding-top: 12px;
+
+    border-top: 1px solid rgba(230, 205, 155, 0.4);
+
+    font-family: Georgia, serif;
+    font-size: 12px;
+    font-style: italic;
+
+    color: rgba(255, 246, 222, 0.85);
+
+    letter-spacing: 1px;
+    line-height: 2;
+}
+
+.author-credit strong {
+    display: block;
+
+    margin: 3px 0;
+
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-style: normal;
+
+    letter-spacing: 4px;
+
+    color: #f3d49a;
+
+    text-shadow:
+        0 0 8px rgba(255, 220, 160, 0.4),
+        0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.author-credit span {
+    display: block;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 11px;
+
+    font-style: normal;
+    letter-spacing: 1px;
+
+    color: #f8e9d0;
+}
+
+@media (max-width: 480px) {
+    .author-credit {
+        font-size: 11px;
+    }
+
+    .author-credit strong {
+        font-size: 16px;
+    }
+}
+
+
+/* =========================================
+   10. RESPONSIVE - TABLET VÀ ĐIỆN THOẠI
+========================================= */
+
+@media (max-width: 768px) {
+
+    .header {
+        width: 94%;
+        margin-top: 15px;
+        padding: 16px 10px;
+    }
+
+    .header .school-name {
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .header h1 {
+        font-size: clamp(25px, 7vw, 36px);
+        letter-spacing: 1px;
+    }
+
+    .pond-area {
+        min-height: 620px;
+        height: 66vh;
+    }
+
+    .pond-background img {
+        object-position: 72% center;
+    }
+
+    .lotus-name {
+        font-size: 10px;
+        padding: 4px 7px;
+    }
+
+    .letter {
+        padding: 40px 25px 28px;
+    }
+
+    .letter-message {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .pond-area {
+        min-height: 590px;
+    }
+
+    .header .subtitle {
+        font-size: 12px;
+    }
+
+    .pond-caption {
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    .footer {
+        font-size: 10px;
+    }
+
+    .lotus-name {
+        font-size: 9px;
+    }
+}
+
+/* Tôn trọng cài đặt giảm chuyển động */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="scene">
+
+    <!-- =====================================
+         BACKGROUND DUY NHẤT: image.png
+
+         Đặt image.png cạnh index.html
+    ====================================== -->
+
+    <div class="pond-background">
+
+        <img
+            src="image.png"
+            alt="Hồ sen xanh ngọc dưới ánh trăng"
+        >
+
+    </div>
+
+    <!-- =====================================
+         TIÊU ĐỀ LIÊN HOA TRI ÂN
+    ====================================== -->
+
+    <header class="header">
+
+        <div class="school-name">
+            TRƯỜNG THPT QUỐC THÁI
+        </div>
+
+        <h1>LIÊN HOA TRI ÂN</h1>
+
+        <div class="ornament"></div>
+
+        <p class="subtitle">
+            Nơi những tấm lòng ươm mầm tri thức
+        </p>
+
+    </header>
+
+    <!-- =====================================
+         KHU VỰC HỒ SEN VÀ 15 ĐÓA SEN
+    ====================================== -->
+
+    <main class="pond-area" id="pond">
+
+        <div class="pond-caption">
+            CHẠM VÀO MỖI ĐÓA SEN – GỬI TRAO MỘT LỜI TRI ÂN
+        </div>
+
+        <div class="water-glow"></div>
+
+        <div class="sparkles" id="sparkles"></div>
+
+        <!-- 15 hoa được tạo bằng JavaScript -->
+
+        <div id="lotusContainer"></div>
+
+    </main>
+
+    <!-- =====================================
+         CHÂN TRANG
+    ====================================== -->
+
+    
+<footer class="footer">
+
+    <strong>LIÊN HOA TRI ÂN</strong>
+
+    <br>
+
+    Trân trọng những cống hiến – Gìn giữ những yêu thương
+
+    <br>
+
+    Trường THPT Quốc Thái
+
+    <div class="author-credit">
+        Ý tưởng và thực hiện bởi
+        <strong>CÔNG HUY</strong>
+        <span>Học sinh lớp 12A12 – Trường THPT Quốc Thái</span>
+    </div>
+
+</footer>
+
+
+</div>
+
+
+<!-- =========================================
+     THIỆP TRI ÂN
+========================================= -->
+
+<div class="modal" id="letterModal">
+
+    <div
+        class="letter"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="letterTitle"
+    >
+
+        <button
+            class="close-button"
+            id="closeModal"
+            aria-label="Đóng thiệp"
+        >
+            ×
+        </button>
+
+        <div class="letter-ornament">
+            ❀
+        </div>
+
+        <div class="letter-label">
+            TRÂN TRỌNG VÀ BIẾT ƠN
+        </div>
+
+        <h2 id="letterTitle">
+            Ban Giám hiệu
+        </h2>
+
+        <div class="letter-divider"></div>
+
+        <div
+            class="letter-message"
+            id="letterMessage"
+        >
+            Nội dung lời tri ân sẽ được cập nhật tại đây.
+        </div>
+
+        <div class="letter-divider"></div>
+
+        <div class="letter-signature">
+
+            Với tất cả sự trân trọng và yêu thương
+
+            <br>
+
+            <strong>LIÊN HOA TRI ÂN</strong>
+
+        </div>
+
+        <div class="letter-ornament" style="margin-top:20px">
+            ❀
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   1. DỮ LIỆU 15 TẬP THỂ
+
+   Bạn chỉ cần chỉnh sửa thuộc tính message.
+========================================= */
+
+const groups = [
+
+    {
+        id: 1,
+        name: "Ban Giám hiệu",
+        message: "Thầy cô chèo lái con thuyền, Đưa trường vững bước, nối miền ước mơ. Bao ngày tận tụy sớm trưa, Dựng xây trường lớp, vun mùa tương lai."
+    },
+
+    {
+        id: 2,
+        name: "Tổ Toán",
+        message: "Thầy cô gieo những phép màu, Cho em tìm thấy nhịp cầu tư duy. Từ bao con số diệu kỳ, Dạy em suy luận, bước đi vững vàng."
+    },
+
+    {
+        id: 3,
+        name: "Tổ Vật lý",
+        message: "Thầy cô mở lối tìm tòi, Cho em khám phá đất trời bao la. Từ dòng điện đến vì sao, Tri ân người đã mở bao chân trời."
+    },
+
+    {
+        id: 4,
+        name: "Tổ Hóa học",
+        message: "Thầy cô bên những lọ màu, Cho em hiểu biết nhiệm màu hóa sinh. Từ bao phản ứng lung linh, Gieo niềm khám phá, vun tình đam mê."
+    },
+
+    {
+        id: 5,
+        name: "Tổ Sinh học",
+        message: "Thầy cô vun những mầm xanh, Dạy em trân quý sự lành quanh ta. Hiểu bao sự sống chan hòa, Ơn người gieo hạt thiết tha nghĩa tình."
+    },
+
+    {
+        id: 6,
+        name: "Tổ Tin học",
+        message: "Thầy cô mở cánh cửa số, Cho em khám phá những điều mới hơn. Dòng code kết nối muôn phương, Ơn người dẫn lối trên đường tương lai."
+    },
+
+    {
+        id: 7,
+        name: "Tổ Ngữ văn",
+        message: "Lời vàng ngọc của thầy cô, Nuôi hồn em giữa muôn ngàn yêu thương. Dạy em cảm nhận cuộc đời, Biết yêu, biết quý tình người bao la."
+    },
+
+    {
+        id: 8,
+        name: "Tổ Tiếng Anh",
+        message: "Thầy cô trao những lời hay, Cho em rộng mở vòng tay bạn bè. Ngoại ngữ chắp cánh em về, Vươn ra thế giới, say mê tháng ngày."
+    },
+
+    {
+        id: 9,
+        name: "Tổ KTPL",
+        message: "Thầy cô dạy lẽ công bằng, Cho em hiểu luật, biết rằng đúng sai. Sống sao trách nhiệm mỗi ngày, Biết yêu lẽ phải, dựng xây cuộc đời."
+    },
+
+    {
+        id: 10,
+        name: "Tổ Công nghệ",
+        message: "Thầy cô khơi những đam mê, Cho em sáng tạo, say mê dựng xây. Từ bao ý tưởng hôm nay, Mai thành giá trị, dựng xây cuộc đời."
+    },
+
+    {
+        id: 11,
+        name: "Tổ Lịch sử",
+        message: "Thầy cô kể chuyện cha ông, Cho em ghi nhớ non sông giống nòi. Bao trang sử sáng ngời ngời, Ơn người gìn giữ một thời vẻ vang."
+    },
+
+    {
+        id: 12,
+        name: "Tổ Địa lý",
+        message: "Thầy cô mở những chân trời, Đưa em khám phá muôn nơi địa cầu. Từ miền núi đến biển sâu, Dạy em yêu đất, thương màu quê hương."
+    },
+
+    {
+        id: 13,
+        name: "Tổ Giáo dục thể chất",
+        message: "Sân trường vang tiếng chân vui, Thầy cô rèn luyện cho người khỏe hơn. Dạy em bền chí vững lòng, Tri ân người giữ lửa hồng thể thao."
+    },
+
+    {
+        id: 14,
+        name: "Tổ Giáo dục quốc phòng và an ninh",
+        message: "Thầy cô dạy bước quân hành, Cho em ý thức trưởng thành hôm nay. Yêu quê hương, quý tháng ngày, Gìn non giữ nước, dựng xây hòa bình."
+    },
+
+    {
+        id: 15,
+        name: "Tập thể nhân viên nhà trường",
+        message: "Thầm lặng góp sức mỗi ngày, Giữ cho trường lớp đong đầy niềm vui. Dẫu không đứng lớp giảng bài, Ơn người góp sức, chẳng phai nghĩa tình."
+    }
+
+];
+
+
+/* =========================================
+   2. VỊ TRÍ TỰ DO CỦA 15 ĐÓA SEN
+
+   Giữ nguyên toàn bộ tọa độ, kích thước
+   và tốc độ chuyển động của file gốc.
+========================================= */
+
+const flowerPositions = [
+
+    { x: 12, y: 70, size: 125, duration: 5.5 },
+    { x: 29, y: 45, size: 76, duration: 6.2 },
+    { x: 48, y: 72, size: 115, duration: 5.1 },
+    { x: 69, y: 49, size: 82, duration: 6.5 },
+    { x: 88, y: 69, size: 130, duration: 5.8 },
+
+    { x: 19, y: 88, size: 95, duration: 5.2 },
+    { x: 39, y: 89, size: 67, duration: 6.1 },
+    { x: 60, y: 89, size: 75, duration: 5.7 },
+    { x: 79, y: 88, size: 91, duration: 6.3 },
+
+    { x: 8, y: 47, size: 65, duration: 5.9 },
+    { x: 37, y: 61, size: 86, duration: 6.6 },
+    { x: 57, y: 43, size: 63, duration: 5.4 },
+    { x: 95, y: 48, size: 67, duration: 6.0 },
+
+    { x: 26, y: 70, size: 72, duration: 5.3 },
+    { x: 74, y: 70, size: 70, duration: 6.4 }
+
+];
+
+
+/* =========================================
+   3. ĐƯỜNG DẪN ẢNH HOA SEN THỰC TẾ
+
+   Đặt ảnh tại:
+   images/lotus-flower.png
+
+   Lưu ý:
+   Ảnh hoa cần có nền trong suốt để
+   hiển thị đẹp trên mặt hồ.
+========================================= */
+
+const LOTUS_IMAGE = "images/lotus-flower.png";
+
+const container = document.getElementById("lotusContainer");
+
+
+/* =========================================
+   4. TẠO 15 ĐÓA SEN
+========================================= */
+
+groups.forEach((group, index) => {
+
+    const position = flowerPositions[index];
+
+    const flower = document.createElement("button");
+
+    flower.type = "button";
+
+    flower.className = "lotus";
+
+    flower.setAttribute(
+        "aria-label",
+        "Mở thiệp tri ân " + group.name
+    );
+
+    flower.style.setProperty(
+        "--x",
+        position.x + "%"
+    );
+
+    flower.style.setProperty(
+        "--y",
+        position.y + "%"
+    );
+
+    flower.style.setProperty(
+        "--size",
+        position.size + "px"
+    );
+
+    flower.style.setProperty(
+        "--duration",
+        position.duration + "s"
+    );
+
+    flower.style.setProperty(
+        "--delay",
+        (index * -0.35) + "s"
+    );
+
+    const image = document.createElement("img");
+
+    image.src = LOTUS_IMAGE;
+
+    image.alt = "Hoa sen hồng";
+
+    image.loading = "eager";
+
+    image.decoding = "async";
+
+    image.draggable = false;
+
+    const name = document.createElement("span");
+
+    name.className = "lotus-name";
+
+    name.textContent = group.name;
+
+    flower.appendChild(image);
+
+    flower.appendChild(name);
+
+    flower.addEventListener("click", () => {
+
+        openLetter(group);
+
+    });
+
+    container.appendChild(flower);
+
+});
+
+
+/* =========================================
+   5. THIỆP TRI ÂN
+========================================= */
+
+const modal = document.getElementById("letterModal");
+
+const letterTitle = document.getElementById("letterTitle");
+
+const letterMessage = document.getElementById("letterMessage");
+
+const closeButton = document.getElementById("closeModal");
+
+
+function openLetter(group) {
+
+    letterTitle.textContent = group.name;
+
+    letterMessage.textContent = group.message;
+
+    modal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+
+    closeButton.focus();
+
+}
+
+
+function closeLetter() {
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* Đóng bằng nút X */
+
+closeButton.addEventListener("click", closeLetter);
+
+
+/* Đóng khi nhấn ra ngoài thiệp */
+
+modal.addEventListener("click", (event) => {
+
+    if (event.target === modal) {
+
+        closeLetter();
+
+    }
+
+});
+
+
+/* Đóng bằng phím ESC */
+
+document.addEventListener("keydown", (event) => {
+
+    if (
+        event.key === "Escape" &&
+        modal.classList.contains("active")
+    ) {
+
+        closeLetter();
+
+    }
+
+});
+
+
+/* =========================================
+   6. TẠO CÁC ĐỐM SÁNG NHỎ
+========================================= */
+
+const sparkleContainer = document.getElementById("sparkles");
+
+for (let i = 0; i < 35; i++) {
+
+    const sparkle = document.createElement("span");
+
+    sparkle.className = "sparkle";
+
+    sparkle.style.left = Math.random() * 100 + "%";
+
+    sparkle.style.top = Math.random() * 100 + "%";
+
+    sparkle.style.animationDelay =
+        Math.random() * 5 + "s";
+
+    sparkle.style.animationDuration =
+        (3 + Math.random() * 4) + "s";
+
+    sparkleContainer.appendChild(sparkle);
+
+}
+
+
+/* =========================================
+   7. TẠO GỢN SÓNG NHẸ
+========================================= */
+
+const pond = document.getElementById("pond");
+
+const ripplePositions = [
+
+    [16, 58],
+    [35, 79],
+    [53, 56],
+    [76, 77],
+    [91, 57]
+
+];
+
+ripplePositions.forEach((position, index) => {
+
+    const ripple = document.createElement("div");
+
+    ripple.className = "ripple";
+
+    ripple.style.left = position[0] + "%";
+
+    ripple.style.top = position[1] + "%";
+
+    ripple.style.animationDelay =
+        (index * 1.1) + "s";
+
+    pond.appendChild(ripple);
+
+});
+
+
+/* =========================================
+   8. KIỂM TRA ẢNH HOA
+
+   Nếu không tìm thấy ảnh, hiển thị lỗi
+   trong Console để dễ kiểm tra.
+========================================= */
+
+document.querySelectorAll(".lotus img").forEach(image => {
+
+    image.addEventListener("error", () => {
+
+        console.error(
+            "Không tìm thấy ảnh hoa sen:",
+            image.src
+        );
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
